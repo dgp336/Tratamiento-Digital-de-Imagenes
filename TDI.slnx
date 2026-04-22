@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="TDI/TDI.vcxproj" Id="1ad5d1a1-918a-4bea-8170-11a64f7f7572" />
+</Solution>
