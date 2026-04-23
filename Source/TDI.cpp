@@ -19,7 +19,7 @@ void UmbralizarFondo(C_Image& img, int umbral) {
     }
 }
 
-int etiquetarYFiltrar(C_Image& binaria, int areaMinima) {
+int EtiquetarYFiltrar(C_Image& binaria, int areaMinima) {
     C_Image etiquetas(binaria.FirstRow(), binaria.LastRow(),
         binaria.FirstCol(), binaria.LastCol(), 0);
 
@@ -104,7 +104,7 @@ int etiquetarYFiltrar(C_Image& binaria, int areaMinima) {
 
 // --- OTRAS FUNCIONES IMPLEMENTADAS ---
 
-void filtroMaximos(C_Image& img, int longitudMascara) {
+void FiltroMaximos(C_Image& img, int longitudMascara) {
     int offset = longitudMascara / 2;
     C_Image temp(img);
 
@@ -124,7 +124,7 @@ void filtroMaximos(C_Image& img, int longitudMascara) {
     }
 }
 
-void FiltroErosion(C_Image& img, int tamVentana) {
+void FiltroMinimos(C_Image& img, int tamVentana) {
     int offset = tamVentana / 2;
     C_Image temp(img);
 
@@ -156,7 +156,7 @@ void FiltroMediana(C_Image& img, int mascara) {
                     ventana[idx++] = temp(fila + i, columna + j);
                 }
             }
-            // Optimización: nth_element es mucho más rápido que sort para encontrar la mediana
+            // nth_element es mucho más rápido que sort para encontrar la mediana
             nth_element(ventana.begin(), ventana.begin() + size / 2, ventana.end());
             img(fila, columna) = ventana[size / 2];
         }
@@ -185,7 +185,7 @@ void DeteccionBordesSobel(C_Image& entrada, C_Image& salida) {
 
 // --- FUNCIÓN GENÉRICA DE PROCESAMIENTO PARAMETRIZADA ---
 
-void procesarImagen(string nombreArchivo, int areaMinima, int umbral, int kernelMedia) {
+void ProcesarImagen(string nombreArchivo, int areaMinima, int umbral, int kernelMedia) {
     C_Image img;
     int numCartas;
     string nombreBase = nombreArchivo.substr(0, nombreArchivo.find_last_of("."));
@@ -206,7 +206,7 @@ void procesarImagen(string nombreArchivo, int areaMinima, int umbral, int kernel
     img.Write(("Resultados/" + nombreBase + "_Procesada_Binaria.bmp").c_str());
 
     C_Trace(("Inicio del algoritmo de recuento de area mayor que" + to_string(areaMinima) + "...").c_str());
-    numCartas = etiquetarYFiltrar(img, areaMinima);
+    numCartas = EtiquetarYFiltrar(img, areaMinima);
 
     C_Trace("\n----------------------------------------\n");
     C_Trace((" RESULTADO PARA " + nombreArchivo).c_str());
@@ -217,7 +217,7 @@ void procesarImagen(string nombreArchivo, int areaMinima, int umbral, int kernel
 }
 
 // --- MENÚ DE OTRAS OPERACIONES ---
-void menuOtrasOperaciones() {
+void MenuOtrasOperaciones() {
     string archivo;
     int opcion;
     int tamanoMascara = 3;
@@ -251,12 +251,12 @@ void menuOtrasOperaciones() {
 
     switch (opcion) {
     case 1:
-        FiltroErosion(img, tamanoMascara);
-        img.Write(("Otros algoritmos/" + nombreBase + "_Erosion.bmp").c_str());
-        cout << "-> Guardado en 'Otros algoritmos/" << nombreBase << "_Erosion.bmp'" << endl;
+        FiltroMinimos(img, tamanoMascara);
+        img.Write(("Otros algoritmos/" + nombreBase + "_Minimos.bmp").c_str());
+        cout << "-> Guardado en 'Otros algoritmos/" << nombreBase << "_Minimos.bmp'" << endl;
         break;
     case 2:
-        filtroMaximos(img, tamanoMascara);
+        FiltroMaximos(img, tamanoMascara);
         img.Write(("Otros algoritmos/" + nombreBase + "_Maximos.bmp").c_str());
         cout << "-> Guardado en 'Otros algoritmos/" << nombreBase << "_Maximos.bmp'" << endl;
         break;
@@ -318,14 +318,14 @@ int main() {
         cin >> opcion;
 
         switch (opcion) {
-        case 1: procesarImagen("cartas01.bmp", areaMinima, umbral, kernelMedia); break;
-        case 2: procesarImagen("cartas02.bmp", areaMinima, umbral, kernelMedia); break;
-        case 3: procesarImagen("cartas03.bmp", areaMinima, umbral, kernelMedia); break;
-        case 4: procesarImagen("cartas04.bmp", areaMinima, umbral, kernelMedia); break;
+        case 1: ProcesarImagen("cartas01.bmp", areaMinima, umbral, kernelMedia); break;
+        case 2: ProcesarImagen("cartas02.bmp", areaMinima, umbral, kernelMedia); break;
+        case 3: ProcesarImagen("cartas03.bmp", areaMinima, umbral, kernelMedia); break;
+        case 4: ProcesarImagen("cartas04.bmp", areaMinima, umbral, kernelMedia); break;
         case 5: 
             for (int i = 1; i <= 4;i++) {
                 string carta = "cartas0" + to_string(i) + ".bmp";
-                procesarImagen(carta, areaMinima, umbral, kernelMedia);
+                ProcesarImagen(carta, areaMinima, umbral, kernelMedia);
             }
             break;
         case 6:
@@ -347,7 +347,7 @@ int main() {
             cout << "\n-> Parametros configurados correctamente.\n";
             break;
         case 7:
-            menuOtrasOperaciones();
+            MenuOtrasOperaciones();
             break;
         case 0: cout << "Saliendo del programa..." << endl; break;
         default: cout << "Opcion no valida." << endl; break;
