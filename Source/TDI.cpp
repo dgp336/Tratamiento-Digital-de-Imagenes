@@ -6,17 +6,119 @@
 #include <cmath>
 #include <string>
 #include <filesystem>
+#include <limits>
 
 using namespace std;
 
 // --- FUNCIONES DE PROCESAMIENTO ---
 
-void UmbralizarFondo(C_Image& img, int umbral) {
+void Umbralizar(C_Image& img, int umbral) {
     for (C_Image::IndexT fila = img.FirstRow(); fila <= img.LastRow(); fila++) {
         for (C_Image::IndexT columna = img.FirstCol(); columna <= img.LastCol(); columna++) {
             img(fila, columna) = (img(fila, columna) < umbral) ? 0 : 255;
         }
     }
+}
+
+void NormalizarHistograma(vector<double>& histograma) {
+    const int NIVELES = 256;
+    double suma = 0.0;
+    for (int k = 0; k < NIVELES; k++) {
+        suma += histograma[k];
+    }
+    
+    if (suma > 0.0) {
+        for (int k = 0; k < NIVELES; k++) {
+            histograma[k] /= suma;
+        }
+    }
+}
+
+vector<double> ComputarHistograma(C_Image& img) {
+    const int NIVELES = 256;
+    vector<double> histograma(NIVELES, 0.0);
+
+    // Contar píxeles por intensidad
+    for (C_Image::IndexT fila = img.FirstRow(); fila <= img.LastRow(); fila++) {
+        for (C_Image::IndexT columna = img.FirstCol(); columna <= img.LastCol(); columna++) {
+            int intensidad = static_cast<int>(lround(img(fila, columna)));
+            intensidad = max(0, min(255, intensidad));
+            histograma[intensidad] += 1.0;
+        }
+    }
+
+    return histograma;
+}
+
+int UmbralizarOtsu(C_Image& img) {
+    const int NIVELES = 256;
+    
+    // 1) Histograma normalizado
+    vector<double> histograma = ComputarHistograma(img);
+
+    // Normalizar histograma
+    NormalizarHistograma(histograma);
+
+    // 2) Sumas acumuladas P(k)
+    vector<double> P(NIVELES, 0.0);
+    P[0] = histograma[0];
+    for (int k = 1; k < NIVELES; k++) {
+        P[k] = P[k - 1] + histograma[k];
+    }
+
+    // 3) Medias acumuladas m(k)
+    vector<double> m(NIVELES, 0.0);
+    m[0] = 0.0 * histograma[0];
+    for (int k = 1; k < NIVELES; k++) {
+        m[k] = m[k - 1] + static_cast<double>(k) * histograma[k];
+    }
+
+    // Cálculo acumulado de segundo momento para varianzas
+    vector<double> m2(NIVELES, 0.0);
+    m2[0] = 0.0;
+    for (int k = 1; k < NIVELES; k++) {
+        m2[k] = m2[k - 1] + static_cast<double>(k * k) * histograma[k];
+    }
+
+    // 4) Media global
+    const double mediaGlobal = m[NIVELES - 1];
+    const double segundoMomentoGlobal = m2[NIVELES - 1];
+
+    // 5) Vector de varianzas intra-clase
+    vector<double> varIntraClase(NIVELES, numeric_limits<double>::infinity());
+    int umbralOtsu = 0;
+    double minimo = numeric_limits<double>::infinity();
+    const double EPS = 1e-12;
+
+    for (int k = 0; k < NIVELES - 1; k++) {
+        double w0 = P[k];
+        double w1 = 1.0 - w0;
+
+        if (w0 <= EPS || w1 <= EPS) {
+            continue;
+        }
+
+        double mu0 = m[k] / w0;
+        double mu1 = (mediaGlobal - m[k]) / w1;
+
+        double var0 = (m2[k] / w0) - (mu0 * mu0);
+        double var1 = ((segundoMomentoGlobal - m2[k]) / w1) - (mu1 * mu1);
+
+        if (var0 < 0.0) var0 = 0.0;
+        if (var1 < 0.0) var1 = 0.0;
+
+        varIntraClase[k] = (w0 * var0) + (w1 * var1);
+
+        // 6) Umbral Otsu: k con varianza intra-clase mínima
+        if (varIntraClase[k] < minimo) {
+            minimo = varIntraClase[k];
+            umbralOtsu = k;
+        }
+    }
+
+    // 7) Binarización final con el umbral encontrado
+    Umbralizar(img, umbralOtsu);
+    return umbralOtsu;
 }
 
 int EtiquetarYFiltrar(C_Image& binaria, int areaMinima) {
@@ -189,6 +291,7 @@ void ProcesarImagen(string nombreArchivo, int areaMinima, int umbral, int kernel
     C_Image img;
     int numCartas;
     string nombreBase = nombreArchivo.substr(0, nombreArchivo.find_last_of("."));
+    (void)umbral;
 
     C_Trace(("Comenzando procedimiento para " + nombreArchivo + "...").c_str());
     img.Read(nombreArchivo.c_str());
@@ -201,8 +304,9 @@ void ProcesarImagen(string nombreArchivo, int areaMinima, int umbral, int kernel
     img.MeanFilter(img, kernelMedia);
     img.Write(("Pasos intermedios/" + nombreBase + "_02_Media.bmp").c_str());
 
-    C_Trace(("Umbralizando imagen con valor " + to_string(umbral) + "...").c_str());
-    UmbralizarFondo(img, umbral);
+    C_Trace("Umbralizando imagen automaticamente con Otsu...");
+    int umbralOtsu = UmbralizarOtsu(img);
+    C_Trace(("Umbral Otsu calculado: " + to_string(umbralOtsu)).c_str());
     img.Write(("Resultados/" + nombreBase + "_Procesada_Binaria.bmp").c_str());
 
     C_Trace(("Inicio del algoritmo de recuento de area mayor que" + to_string(areaMinima) + "...").c_str());
