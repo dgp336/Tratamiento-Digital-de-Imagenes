@@ -46,3 +46,107 @@ TDI T (TDI,  212)  RESULTADO PARA cartas04.bmp
 TDI T (TDI,  213)  Cartas detectadas: 0
 TDI T (TDI,  214) ----------------------------------------
 
+TDI T (TDI,  296) Comenzando procedimiento para cartas01.bmp...
+TDI T (TDI,  300) Imagen convertida a escala de grises.
+TDI T (TDI,  303) Aplicando filtro de la media 3x3...
+TDI T (TDI,  307) Umbralizando imagen automaticamente con Otsu...
+TDI T (TDI,  309) Umbral Otsu calculado: 114
+TDI T (TDI,  312) Inicio del algoritmo de recuento de area mayor que2000...
+TDI T (TDI,  315) 
+----------------------------------------
+
+TDI T (TDI,  316)  RESULTADO PARA cartas01.bmp
+TDI T (TDI,  317)  Cartas detectadas: 8
+TDI T (TDI,  318) ----------------------------------------
+
+TDI T (TDI,  296) Comenzando procedimiento para cartas02.bmp...
+TDI T (TDI,  300) Imagen convertida a escala de grises.
+TDI T (TDI,  303) Aplicando filtro de la media 3x3...
+TDI T (TDI,  307) Umbralizando imagen automaticamente con Otsu...
+TDI T (TDI,  309) Umbral Otsu calculado: 90
+TDI T (TDI,  312) Inicio del algoritmo de recuento de area mayor que2000...
+TDI T (TDI,  315) 
+----------------------------------------
+
+TDI T (TDI,  316)  RESULTADO PARA cartas02.bmp
+TDI T (TDI,  317)  Cartas detectadas: 5
+TDI T (TDI,  318) ----------------------------------------
+
+TDI T (TDI,  296) Comenzando procedimiento para cartas03.bmp...
+TDI T (TDI,  300) Imagen convertida a escala de grises.
+TDI T (TDI,  303) Aplicando filtro de la media 3x3...
+TDI T (TDI,  307) Umbralizando imagen automaticamente con Otsu...
+TDI T (TDI,  309) Umbral Otsu calculado: 85
+TDI T (TDI,  312) Inicio del algoritmo de recuento de area mayor que2000...
+TDI T (TDI,  315) 
+----------------------------------------
+
+TDI T (TDI,  316)  RESULTADO PARA cartas03.bmp
+TDI T (TDI,  317)  Cartas detectadas: 6
+TDI T (TDI,  318) ----------------------------------------
+
+TDI T (TDI,  296) Comenzando procedimiento para cartas04.bmp...
+TDI T (TDI,  300) Imagen convertida a escala de grises.
+TDI T (TDI,  303) Aplicando filtro de la media 3x3...
+TDI T (TDI,  307) Umbralizando imagen automaticamente con Otsu...
+TDI T (TDI,  309) Umbral Otsu calculado: 49
+TDI T (TDI,  312) Inicio del algoritmo de recuento de area mayor que2000...
+TDI T (TDI,  315) 
+----------------------------------------
+
+TDI T (TDI,  316)  RESULTADO PARA cartas04.bmp
+TDI T (TDI,  317)  Cartas detectadas: 1
+TDI T (TDI,  318) ----------------------------------------
+
+TDI T (TDI,  296) Comenzando procedimiento para cartas01.bmp...
+TDI T (TDI,  300) Imagen convertida a escala de grises.
+TDI T (TDI,  303) Aplicando filtro de la media 3x3...
+TDI T (TDI,  307) Umbralizando imagen automaticamente con Otsu...
+TDI T (TDI,  309) Umbral Otsu calculado: 114
+TDI T (TDI,  312) Inicio del algoritmo de recuento de area mayor que2000...
+TDI T (TDI,  315) 
+----------------------------------------
+
+TDI T (TDI,  316)  RESULTADO PARA cartas01.bmp
+TDI T (TDI,  317)  Cartas detectadas: 8
+TDI T (TDI,  318) ----------------------------------------
+
+TDI T (TDI,  296) Comenzando procedimiento para cartas02.bmp...
+TDI T (TDI,  300) Imagen convertida a escala de grises.
+TDI T (TDI,  303) Aplicando filtro de la media 3x3...
+TDI T (TDI,  307) Umbralizando imagen automaticamente con Otsu...
+TDI T (TDI,  309) Umbral Otsu calculado: 90
+TDI T (TDI,  312) Inicio del algoritmo de recuento de area mayor que2000...
+TDI T (TDI,  315) 
+----------------------------------------
+
+TDI T (TDI,  316)  RESULTADO PARA cartas02.bmp
+TDI T (TDI,  317)  Cartas detectadas: 5
+TDI T (TDI,  318) ----------------------------------------
+
+TDI T (TDI,  296) Comenzando procedimiento para cartas03.bmp...
+TDI T (TDI,  300) Imagen convertida a escala de grises.
+TDI T (TDI,  303) Aplicando filtro de la media 3x3...
+TDI T (TDI,  307) Umbralizando imagen automaticamente con Otsu...
+TDI T (TDI,  309) Umbral Otsu calculado: 85
+TDI T (TDI,  312) Inicio del algoritmo de recuento de area mayor que2000...
+TDI T (TDI,  315) 
+----------------------------------------
+
+TDI T (TDI,  316)  RESULTADO PARA cartas03.bmp
+TDI T (TDI,  317)  Cartas detectadas: 6
+TDI T (TDI,  318) ----------------------------------------
+
+TDI T (TDI,  296) Comenzando procedimiento para cartas04.bmp...
+TDI T (TDI,  300) Imagen convertida a escala de grises.
+TDI T (TDI,  303) Aplicando filtro de la media 3x3...
+TDI T (TDI,  307) Umbralizando imagen automaticamente con Otsu...
+TDI T (TDI,  309) Umbral Otsu calculado: 49
+TDI T (TDI,  312) Inicio del algoritmo de recuento de area mayor que2000...
+TDI T (TDI,  315) 
+----------------------------------------
+
+TDI T (TDI,  316)  RESULTADO PARA cartas04.bmp
+TDI T (TDI,  317)  Cartas detectadas: 1
+TDI T (TDI,  318) ----------------------------------------
+
