@@ -12,14 +12,6 @@ using namespace std;
 
 // --- FUNCIONES DE PROCESAMIENTO ---
 
-void Umbralizar(C_Image& img, int umbral) {
-    for (C_Image::IndexT fila = img.FirstRow(); fila <= img.LastRow(); fila++) {
-        for (C_Image::IndexT columna = img.FirstCol(); columna <= img.LastCol(); columna++) {
-            img(fila, columna) = (img(fila, columna) < umbral) ? 0 : 255;
-        }
-    }
-}
-
 void NormalizarHistograma(vector<double>& histograma) {
     const int NIVELES = 256;
     double suma = 0.0;
@@ -48,6 +40,14 @@ vector<double> ComputarHistograma(C_Image& img) {
     }
 
     return histograma;
+}
+
+void Umbralizar(C_Image& img, int umbral) {
+    for (C_Image::IndexT fila = img.FirstRow(); fila <= img.LastRow(); fila++) {
+        for (C_Image::IndexT columna = img.FirstCol(); columna <= img.LastCol(); columna++) {
+            img(fila, columna) = (img(fila, columna) < umbral) ? 0 : 255;
+        }
+    }
 }
 
 int UmbralizarOtsu(C_Image& img) {
