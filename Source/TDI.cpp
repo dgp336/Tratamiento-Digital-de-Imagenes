@@ -11,7 +11,7 @@
 using namespace std;
 
 // Parámetros por defecto
-int areaMinima = 2000;
+int areaMinima = 5000;
 int kernelMedia = 3;
 double dispersionSeguridad = 20.0; //Valor de dispersión a partir del cual la imagen se considera bimodal, para saber si umbralizar o no 
 
@@ -462,7 +462,7 @@ int main() {
             cout << "Introduzca el tamano del kernel para el suavizado de la media (Recomendado > 3): ";
             cin >> kernelMedia;
 
-            cout << "Introduzca el area minima para descontar ruido (Recomendado > 2000): ";
+            cout << "Introduzca el area minima para descontar ruido (Recomendado entre 2000 y 7000): ";
             cin >> areaMinima;
 
             // Validación básica
