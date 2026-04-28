@@ -331,11 +331,11 @@ void ProcesarImagen(string nombreArchivo, int areaMinima, int kernelMedia) {
         C_Trace("Histograma bimodal detectado. Umbralizando imagen automaticamente con Otsu...");
         umbralFinal = UmbralizarOtsu(img);
         C_Trace(("Umbral Otsu calculado: " + to_string(umbralFinal)).c_str());
-        img.Write(("Resultados/" + nombreBase + "_Procesada_Binaria.bmp").c_str());
     }
 
     // Ahora aplicas la binarización con el umbral seleccionado
     Umbralizar(img, umbralFinal);
+    img.Write(("Resultados/" + nombreBase + "_Procesada_Binaria.bmp").c_str());
 
     C_Trace(("Inicio del algoritmo de recuento de area mayor que " + to_string(areaMinima) + "...").c_str());
     numCartas = EtiquetarYFiltrar(img, areaMinima);
