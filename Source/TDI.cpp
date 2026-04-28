@@ -10,6 +10,11 @@
 
 using namespace std;
 
+// Parámetros por defecto
+int areaMinima = 2000;
+int kernelMedia = 3;
+double dispersionSeguridad = 20.0; //Valor de dispersión a partir del cual la imagen se considera bimodal, para saber si umbralizar o no 
+
 // --- FUNCIONES DE PROCESAMIENTO ---
 
 void NormalizarHistograma(vector<double>& histograma) {
@@ -299,11 +304,10 @@ void DeteccionBordesSobel(C_Image& entrada, C_Image& salida) {
 
 // --- FUNCIÓN GENÉRICA DE PROCESAMIENTO PARAMETRIZADA ---
 
-void ProcesarImagen(string nombreArchivo, int areaMinima, int umbral, int kernelMedia) {
+void ProcesarImagen(string nombreArchivo, int areaMinima, int kernelMedia) {
     C_Image img;
     int numCartas;
     string nombreBase = nombreArchivo.substr(0, nombreArchivo.find_last_of("."));
-    (void)umbral;
 
     C_Trace(("Comenzando procedimiento para " + nombreArchivo + "...").c_str());
     img.Read(nombreArchivo.c_str());
@@ -320,23 +324,20 @@ void ProcesarImagen(string nombreArchivo, int areaMinima, int umbral, int kernel
     double dispersion = calcularDesviacionEstandar(img);
 
     int umbralFinal;
-    if (dispersion < 20.0) { // Umbral de seguridad para imágenes "planas"
+    if (dispersion < dispersionSeguridad) { // Umbral de seguridad para imágenes "planas"
         C_Trace("Histograma compacto detectado (posible imagen de fondo). Forzando umbral alto.");
         umbralFinal = 250; 
     } else {
-        C_Trace("Histograma bimodal detectado. Ejecutando Otsu...");
+        C_Trace("Histograma bimodal detectado. Umbralizando imagen automaticamente con Otsu...");
         umbralFinal = UmbralizarOtsu(img);
+        C_Trace(("Umbral Otsu calculado: " + to_string(umbralFinal)).c_str());
+        img.Write(("Resultados/" + nombreBase + "_Procesada_Binaria.bmp").c_str());
     }
 
     // Ahora aplicas la binarización con el umbral seleccionado
     Umbralizar(img, umbralFinal);
 
-    C_Trace("Umbralizando imagen automaticamente con Otsu...");
-    int umbralOtsu = UmbralizarOtsu(img);
-    C_Trace(("Umbral Otsu calculado: " + to_string(umbralOtsu)).c_str());
-    img.Write(("Resultados/" + nombreBase + "_Procesada_Binaria.bmp").c_str());
-
-    C_Trace(("Inicio del algoritmo de recuento de area mayor que" + to_string(areaMinima) + "...").c_str());
+    C_Trace(("Inicio del algoritmo de recuento de area mayor que " + to_string(areaMinima) + "...").c_str());
     numCartas = EtiquetarYFiltrar(img, areaMinima);
 
     C_Trace("\n----------------------------------------\n");
@@ -421,18 +422,12 @@ int main() {
 
     int opcion = 0;
 
-    // Parámetros por defecto
-    int areaMinima = 2000;
-    int umbral = 90;
-    int kernelMedia = 3;
-
     cout << "========================================" << endl;
     cout << "   SISTEMA DE CONTEO DE CARTAS (TDI)    " << endl;
     cout << "========================================" << endl;
 
     do {
         cout << "\n----------- PARAMETROS CONFIGURADOS -----------" << endl;
-        cout << "\n Umbral de binarizacion:" << to_string(umbral) << endl;
         cout << "\n Area minima de conteo de objeto:" << to_string(areaMinima) << endl;
         cout << "\n Tamano del kernel de la media:" << to_string(kernelMedia) << endl;
 
@@ -449,30 +444,27 @@ int main() {
         cin >> opcion;
 
         switch (opcion) {
-        case 1: ProcesarImagen("cartas01.bmp", areaMinima, umbral, kernelMedia); break;
-        case 2: ProcesarImagen("cartas02.bmp", areaMinima, umbral, kernelMedia); break;
-        case 3: ProcesarImagen("cartas03.bmp", areaMinima, umbral, kernelMedia); break;
-        case 4: ProcesarImagen("cartas04.bmp", areaMinima, umbral, kernelMedia); break;
+        case 1: ProcesarImagen("cartas01.bmp", areaMinima, kernelMedia); break;
+        case 2: ProcesarImagen("cartas02.bmp", areaMinima, kernelMedia); break;
+        case 3: ProcesarImagen("cartas03.bmp", areaMinima, kernelMedia); break;
+        case 4: ProcesarImagen("cartas04.bmp", areaMinima, kernelMedia); break;
         case 5: 
             for (int i = 1; i <= 4;i++) {
                 string carta = "cartas0" + to_string(i) + ".bmp";
-                ProcesarImagen(carta, areaMinima, umbral, kernelMedia);
+                ProcesarImagen(carta, areaMinima, kernelMedia);
             }
             break;
         case 6:
             cout << "\n[CONFIGURACION DE PARAMETROS]" << endl;
 
-            cout << "Introduzca el umbral de binarizacion (Ej: 90): ";
-            cin >> umbral;
-
-            cout << "Introduzca el kernel para el suavizado de la media (Recomendado > 5): ";
+            cout << "Introduzca el tamano del kernel para el suavizado de la media (Recomendado > 3): ";
             cin >> kernelMedia;
 
             cout << "Introduzca el area minima para descontar ruido (Recomendado > 2000): ";
             cin >> areaMinima;
 
             // Validación básica
-            if (kernelMedia % 2 == 0) kernelMedia++;       // Forzamos a que sea impar
+            if (kernelMedia % 2 == 0) kernelMedia++; // Forzamos a que sea impar
             if (areaMinima <= 0) areaMinima = 50;
 
             cout << "\n-> Parametros configurados correctamente.\n";
