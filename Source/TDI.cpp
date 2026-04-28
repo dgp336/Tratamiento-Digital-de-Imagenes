@@ -116,9 +116,21 @@ int UmbralizarOtsu(C_Image& img) {
         }
     }
 
-    // 7) Binarización final con el umbral encontrado
-    Umbralizar(img, umbralOtsu);
     return umbralOtsu;
+}
+
+double calcularDesviacionEstandar(C_Image& img) {
+    double suma = 0, sumaCuad = 0;
+    int n = img.RowN() * img.ColN();
+    
+    for (C_Image::IndexT r = img.FirstRow(); r <= img.LastRow(); r++) {
+        for (C_Image::IndexT c = img.FirstCol(); c <= img.LastCol(); c++) {
+            suma += img(r, c);
+            sumaCuad += pow(img(r, c), 2);
+        }
+    }
+    double media = suma / n;
+    return sqrt((sumaCuad / n) - pow(media, 2));
 }
 
 int EtiquetarYFiltrar(C_Image& binaria, int areaMinima) {
@@ -303,6 +315,21 @@ void ProcesarImagen(string nombreArchivo, int areaMinima, int umbral, int kernel
     C_Trace(("Aplicando filtro de la media " + to_string(kernelMedia) + "x" + to_string(kernelMedia) + "...").c_str());
     img.MeanFilter(img, kernelMedia);
     img.Write(("Pasos intermedios/" + nombreBase + "_02_Media.bmp").c_str());
+
+    C_Trace("Analizando histograma...");
+    double dispersion = calcularDesviacionEstandar(img);
+
+    int umbralFinal;
+    if (dispersion < 20.0) { // Umbral de seguridad para imágenes "planas"
+        C_Trace("Histograma compacto detectado (posible imagen de fondo). Forzando umbral alto.");
+        umbralFinal = 250; 
+    } else {
+        C_Trace("Histograma bimodal detectado. Ejecutando Otsu...");
+        umbralFinal = UmbralizarOtsu(img);
+    }
+
+    // Ahora aplicas la binarización con el umbral seleccionado
+    Umbralizar(img, umbralFinal);
 
     C_Trace("Umbralizando imagen automaticamente con Otsu...");
     int umbralOtsu = UmbralizarOtsu(img);
