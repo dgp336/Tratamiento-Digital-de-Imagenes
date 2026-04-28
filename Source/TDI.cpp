@@ -451,7 +451,7 @@ int main() {
         case 4: ProcesarImagen("cartas04.bmp", areaMinima, kernelMedia); break;
 		case 5: ProcesarImagen("cartas05.bmp", areaMinima, kernelMedia); break;
         case 6: 
-            for (int i = 1; i <= 4;i++) {
+            for (int i = 1; i <= 5;i++) {
                 string carta = "cartas0" + to_string(i) + ".bmp";
                 ProcesarImagen(carta, areaMinima, kernelMedia);
             }
