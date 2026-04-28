@@ -435,10 +435,11 @@ int main() {
         cout << "1. Procesar cartas01.bmp (8 cartas)" << endl;
         cout << "2. Procesar cartas02.bmp (5 cartas)" << endl;
         cout << "3. Procesar cartas03.bmp (6 cartas)" << endl;
-        cout << "4. Procesar cartas04.bmp (Imagen de control, 0 cartas)" << endl;
-        cout << "5. Procesar todas las imagenes" << endl;
-        cout << "6. Configurar parametros" << endl;
-        cout << "7. Otras operaciones (Filtros extra)" << endl;
+        cout << "4. Procesar cartas04.bmp (0 cartas)" << endl;
+		cout << "5. Procesar cartas05.bmp (50 cartas)" << endl;
+        cout << "6. Procesar todas las imagenes" << endl;
+        cout << "7. Configurar parametros" << endl;
+        cout << "8. Otras operaciones (Filtros extra)" << endl;
         cout << "0. Salir" << endl;
         cout << "Seleccione una opcion: ";
         cin >> opcion;
@@ -448,13 +449,14 @@ int main() {
         case 2: ProcesarImagen("cartas02.bmp", areaMinima, kernelMedia); break;
         case 3: ProcesarImagen("cartas03.bmp", areaMinima, kernelMedia); break;
         case 4: ProcesarImagen("cartas04.bmp", areaMinima, kernelMedia); break;
-        case 5: 
+		case 5: ProcesarImagen("cartas05.bmp", areaMinima, kernelMedia); break;
+        case 6: 
             for (int i = 1; i <= 4;i++) {
                 string carta = "cartas0" + to_string(i) + ".bmp";
                 ProcesarImagen(carta, areaMinima, kernelMedia);
             }
             break;
-        case 6:
+        case 7:
             cout << "\n[CONFIGURACION DE PARAMETROS]" << endl;
 
             cout << "Introduzca el tamano del kernel para el suavizado de la media (Recomendado > 3): ";
@@ -469,7 +471,7 @@ int main() {
 
             cout << "\n-> Parametros configurados correctamente.\n";
             break;
-        case 7:
+        case 8:
             MenuOtrasOperaciones();
             break;
         case 0: cout << "Saliendo del programa..." << endl; break;
