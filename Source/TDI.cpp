@@ -473,9 +473,13 @@ int main() {
             cout << "Introduzca el area minima para descontar ruido (Recomendado entre 2000 y 7000): ";
             cin >> areaMinima;
 
+            cout << "Introduzca el valor de dispersión para determinar la bimodalidad de la imagen (Recomendado 20): ";
+            cin >> dispersionSeguridad;
+
             // Validación básica
             if (kernelMedia % 2 == 0) kernelMedia++; // Forzamos a que sea impar
-            if (areaMinima <= 0) areaMinima = 50;
+            if (areaMinima <= 0) areaMinima = 50; // No permitimos valores negativos o cero
+            if (dispersionSeguridad < 0) dispersionSeguridad = 20.0; // No permitimos valores negativos o cero
 
             cout << "\n-> Parametros configurados correctamente.\n";
             break;
