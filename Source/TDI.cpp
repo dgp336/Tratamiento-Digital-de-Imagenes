@@ -1,3 +1,10 @@
+#ifdef _WIN32
+    #define _HAS_STD_BYTE 0
+    #define NOMINMAX
+    #include <windows.h>
+    #include <shellapi.h>
+#endif
+
 #include "C_Image.hpp"
 #include "C_Matrix.hpp"
 #include <iostream>
@@ -7,11 +14,6 @@
 #include <string>
 #include <filesystem>
 #include <limits>
-
-#ifdef _WIN32
-#include <windows.h>
-#include <shellapi.h>
-#endif
 
 using namespace std;
 
@@ -232,8 +234,8 @@ void FiltroMaximos(C_Image& img, int longitudMascara) {
     int offset = longitudMascara / 2;
     C_Image temp(img);
 
-    for (C_Image::IndexT fila = img.FirstRow() + offset; fila <= img.LastRow() - offset; fila++) {
-        for (C_Image::IndexT columna = img.FirstCol() + offset; columna <= img.LastCol() - offset; columna++) {
+    for (int fila = img.FirstRow() + offset; fila <= img.LastRow() - offset; fila++) {
+        for (int columna = img.FirstCol() + offset; columna <= img.LastCol() - offset; columna++) {
             double maximo = -1.0;
             for (int i = -offset; i <= offset; i++) {
                 for (int j = -offset; j <= offset; j++) {
@@ -481,12 +483,22 @@ int main() {
             MenuOtrasOperaciones();
             break;
         case 9:
-            #ifdef _WIN32
-                cout << "Abriendo la carpeta de imagenes (Run)..." << endl;
-                ShellExecute(NULL, "explore", "Run", NULL, NULL, SW_SHOWNORMAL);
-            #else
-                cout << "Esta opcion solo esta disponible en Windows." << endl;
-            #endif
+        #ifdef _WIN32
+                    C_Trace("\n[INFO] Abriendo el explorador en la carpeta: Run...\n");
+
+                    // Intentamos abrir la carpeta "Run" en la raiz del proyecto
+                    // SW_SHOWNORMAL asegura que la ventana se abra en primer plano
+                    HINSTANCE result;
+                    result = ::ShellExecuteA(NULL, "explore", "..\\Run", NULL, NULL, SW_SHOWNORMAL);
+
+                    // Verificacion de errores (si el valor es <= 32, hubo un fallo)
+                    if ((intptr_t)result <= 32) {
+                        cout << "[ERROR] No se pudo encontrar la carpeta 'Run'. "
+                            << "Asegurate de que el ejecutable esta en la raiz del proyecto." << endl;
+                    }
+        #else
+                    cout << "[SISTEMA] Esta opcion solo esta disponible en sistemas Windows." << endl;
+        #endif
             break;
         case 0: cout << "Saliendo del programa..." << endl; break;
         default: cout << "Opcion no valida." << endl; break;
