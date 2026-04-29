@@ -8,6 +8,11 @@
 #include <filesystem>
 #include <limits>
 
+#ifdef _WIN32
+#include <windows.h>
+#include <shellapi.h>
+#endif
+
 using namespace std;
 
 // Parámetros por defecto
@@ -440,6 +445,7 @@ int main() {
         cout << "6. Procesar todas las imagenes" << endl;
         cout << "7. Configurar parametros" << endl;
         cout << "8. Otras operaciones (Filtros extra)" << endl;
+        cout << "9. Abrir carpeta de imagenes (Run)" << endl;
         cout << "0. Salir" << endl;
         cout << "Seleccione una opcion: ";
         cin >> opcion;
@@ -473,6 +479,14 @@ int main() {
             break;
         case 8:
             MenuOtrasOperaciones();
+            break;
+        case 9:
+            #ifdef _WIN32
+                cout << "Abriendo la carpeta de imagenes (Run)..." << endl;
+                ShellExecute(NULL, "explore", "Run", NULL, NULL, SW_SHOWNORMAL);
+            #else
+                cout << "Esta opcion solo esta disponible en Windows." << endl;
+            #endif
             break;
         case 0: cout << "Saliendo del programa..." << endl; break;
         default: cout << "Opcion no valida." << endl; break;
