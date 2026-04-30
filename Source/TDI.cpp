@@ -156,11 +156,11 @@ int EtiquetarYFiltrar(C_Image& binaria, int areaMinima) {
     int siguienteEtiqueta = 1;
 
     // --- PRIMERA PASADA (Detección y Unión) ---
-    for (int r = binaria.FirstRow(); r <= binaria.LastRow(); r++) {
-        for (int c = binaria.FirstCol(); c <= binaria.LastCol(); c++) {
+    for (C_Image::IndexT r = binaria.FirstRow(); r <= binaria.LastRow(); r++) {
+        for (C_Image::IndexT c = binaria.FirstCol(); c <= binaria.LastCol(); c++) {
             if (binaria(r, c) == 255) {
-                int arriba = (r > binaria.FirstRow()) ? etiquetas(r - 1, c) : 0;
-                int izq = (c > binaria.FirstCol()) ? etiquetas(r, c - 1) : 0;
+                C_Image::ElementT arriba = (r > binaria.FirstRow()) ? etiquetas(r - 1, c) : 0;
+                C_Image::ElementT izq = (c > binaria.FirstCol()) ? etiquetas(r, c - 1) : 0;
 
                 if (arriba == 0 && izq == 0) {
                     if (siguienteEtiqueta < MAX_LABELS)
@@ -175,8 +175,8 @@ int EtiquetarYFiltrar(C_Image& binaria, int areaMinima) {
                 else {
                     etiquetas(r, c) = (arriba < izq) ? arriba : izq;
                     if (arriba != izq) {
-                        int raizA = arriba; while (padre[raizA] != raizA) raizA = padre[raizA];
-                        int raizI = izq;    while (padre[raizI] != raizI) raizI = padre[raizI];
+                        int raizA = static_cast<int>(arriba); while (padre[raizA] != raizA) raizA = padre[raizA];
+                        int raizI = static_cast<int>(izq);    while (padre[raizI] != raizI) raizI = padre[raizI];
                         if (raizA != raizI) padre[raizI] = raizA;
                     }
                 }
@@ -186,9 +186,9 @@ int EtiquetarYFiltrar(C_Image& binaria, int areaMinima) {
 
     // --- PASO INTERMEDIO: Conteo de Áreas ---
     vector<int> areas(siguienteEtiqueta, 0);
-    for (int r = etiquetas.FirstRow(); r <= etiquetas.LastRow(); r++) {
-        for (int c = etiquetas.FirstCol(); c <= etiquetas.LastCol(); c++) {
-            int e = etiquetas(r, c);
+    for (C_Image::IndexT r = etiquetas.FirstRow(); r <= etiquetas.LastRow(); r++) {
+        for (C_Image::IndexT c = etiquetas.FirstCol(); c <= etiquetas.LastCol(); c++) {
+            int e = static_cast<int>(etiquetas(r, c));
             if (e != 0) {
                 int raiz = e;
                 while (padre[raiz] != raiz) {
@@ -216,9 +216,9 @@ int EtiquetarYFiltrar(C_Image& binaria, int areaMinima) {
         }
     }
 
-    for (int r = etiquetas.FirstRow(); r <= etiquetas.LastRow(); r++) {
-        for (int c = etiquetas.FirstCol(); c <= etiquetas.LastCol(); c++) {
-            int e = etiquetas(r, c);
+    for (C_Image::IndexT r = etiquetas.FirstRow(); r <= etiquetas.LastRow(); r++) {
+        for (C_Image::IndexT c = etiquetas.FirstCol(); c <= etiquetas.LastCol(); c++) {
+            int e = static_cast<int>(etiquetas(r, c));
             if (e != 0) {
                 etiquetas(r, c) = nuevoID[e];
             }
@@ -234,8 +234,8 @@ void FiltroMaximos(C_Image& img, int longitudMascara) {
     int offset = longitudMascara / 2;
     C_Image temp(img);
 
-    for (int fila = img.FirstRow() + offset; fila <= img.LastRow() - offset; fila++) {
-        for (int columna = img.FirstCol() + offset; columna <= img.LastCol() - offset; columna++) {
+    for (C_Image::IndexT fila = img.FirstRow() + offset; fila <= img.LastRow() - offset; fila++) {
+        for (C_Image::IndexT columna = img.FirstCol() + offset; columna <= img.LastCol() - offset; columna++) {
             double maximo = -1.0;
             for (int i = -offset; i <= offset; i++) {
                 for (int j = -offset; j <= offset; j++) {
